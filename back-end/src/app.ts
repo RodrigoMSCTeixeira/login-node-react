@@ -1,6 +1,6 @@
-const express = require('express');
-const AppDataSource = require('./database/data-source.js');
-const routes = require('./routes/index.js');
+import express from 'express';
+import AppDataSource from './database/data-source';
+import routes from './routes';
 
 const app = express();
 
@@ -12,4 +12,4 @@ AppDataSource.initialize()
   })
   .catch((error) => console.error('Erro ao conectar no banco de dados', error));
 
-module.exports = app;
+export default app;
