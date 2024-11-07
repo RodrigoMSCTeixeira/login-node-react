@@ -37,14 +37,20 @@ export default class CreateUserService extends ServiceModel<UserModel['user']> {
     const createUser = userRepository.create({
       USERNAME: this.#_user.name,
       PASSWORD: hashedPassword,
+      USER_ROLE: {
+        ROLE_ID: this.#_user.userRole,
+      },
     });
 
-    const { USER_ID, USERNAME } = await userRepository.save(createUser);
+    const { USER_ID, USERNAME, USER_ROLE } = await userRepository.save(
+      createUser
+    );
 
     return {
       description: {
         id: USER_ID,
         name: USERNAME,
+        userRole: USER_ROLE.ROLE_NAME,
       },
     };
   }

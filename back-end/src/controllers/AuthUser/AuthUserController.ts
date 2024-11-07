@@ -1,10 +1,10 @@
 import ExpressRequestModel from '../../models/ExpressResquestModel';
-import ServiceModel from '../../models/ServiceModel';
 import UserModel from '../../models/UserModel';
-import ReadUserService from '../../services/User/ReadUserService';
+import ServiceModel from '../../models/ServiceModel';
 import ServiceError from '../../services/ServiceError/ServiceError';
+import AuthUserService from '../../services/AuthUser/AuthUserService';
 
-export default class ReadUserController extends ServiceModel<
+export default class AuthUserController extends ServiceModel<
   ExpressRequestModel<UserModel['user']>['response']
 > {
   #_req: ExpressRequestModel['request'];
@@ -19,17 +19,15 @@ export default class ReadUserController extends ServiceModel<
     this.#_res = res;
   }
 
-  protected async read(): Promise<
-    ExpressRequestModel<UserModel['user']>['response']
-  > {
+  async #login(): Promise<ExpressRequestModel<UserModel['user']>['response']> {
     try {
-      const sanitizedBody = UserModel.sanitizeRequest(this.#_req.query);
+      const sanitizedBody = UserModel.sanitizeRequest(this.#_req.body);
 
-      const response = await new ReadUserService({
+      const response = await new AuthUserService({
         description: {
           body: sanitizedBody,
         },
-      }).getRead;
+      }).getLogin;
 
       return this.#_res.status(200).json({
         status: 'success',
@@ -46,12 +44,12 @@ export default class ReadUserController extends ServiceModel<
 
       this.#_res.status(500).json({
         status: 'failed',
-        message: 'Erro ao ler registro.',
+        message: 'Erro ao criar registro.',
       });
     }
   }
 
-  get getRead(): Promise<ExpressRequestModel<UserModel['user']>['response']> {
-    return this.read();
+  get getLogin(): Promise<ExpressRequestModel<UserModel['user']>['response']> {
+    return this.#login();
   }
 }

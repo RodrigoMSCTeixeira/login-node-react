@@ -14,7 +14,9 @@ export class Role {
   @PrimaryGeneratedColumn('uuid')
   ROLE_ID: string;
 
-  @Column('varchar')
+  @Column('varchar', {
+    unique: true,
+  })
   ROLE_NAME: string;
 
   @CreateDateColumn()
@@ -26,8 +28,6 @@ export class Role {
   @DeleteDateColumn()
   DELETED_AT: Date;
 
-  @OneToMany(() => User, (user) => user.USER_ID, {
-    nullable: true,
-  })
+  @OneToMany(() => User, (user) => user.USER_ROLE)
   users: User[];
 }

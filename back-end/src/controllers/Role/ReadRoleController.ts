@@ -1,18 +1,18 @@
 import ExpressRequestModel from '../../models/ExpressResquestModel';
+import RoleModel from '../../models/RoleModel';
 import ServiceModel from '../../models/ServiceModel';
-import UserModel from '../../models/UserModel';
-import ReadUserService from '../../services/User/ReadUserService';
 import ServiceError from '../../services/ServiceError/ServiceError';
+import ReadRoleService from '../../services/Role/ReadRoleService';
 
-export default class ReadUserController extends ServiceModel<
-  ExpressRequestModel<UserModel['user']>['response']
+export default class ReadRoleController extends ServiceModel<
+  ExpressRequestModel<RoleModel['role']>['response']
 > {
   #_req: ExpressRequestModel['request'];
-  #_res: ExpressRequestModel<UserModel['user']>['response'];
+  #_res: ExpressRequestModel<RoleModel['role']>['response'];
 
   constructor(
     req: ExpressRequestModel['request'],
-    res: ExpressRequestModel<UserModel['user']>['response']
+    res: ExpressRequestModel<RoleModel['role']>['response']
   ) {
     super();
     this.#_req = req;
@@ -20,12 +20,12 @@ export default class ReadUserController extends ServiceModel<
   }
 
   protected async read(): Promise<
-    ExpressRequestModel<UserModel['user']>['response']
+    ExpressRequestModel<RoleModel['role']>['response']
   > {
     try {
-      const sanitizedBody = UserModel.sanitizeRequest(this.#_req.query);
+      const sanitizedBody = RoleModel.sanitizeRequest(this.#_req.query);
 
-      const response = await new ReadUserService({
+      const response = await new ReadRoleService({
         description: {
           body: sanitizedBody,
         },
@@ -46,12 +46,12 @@ export default class ReadUserController extends ServiceModel<
 
       this.#_res.status(500).json({
         status: 'failed',
-        message: 'Erro ao ler registro.',
+        message: 'Erro ao criar registro.',
       });
     }
   }
 
-  get getRead(): Promise<ExpressRequestModel<UserModel['user']>['response']> {
+  get getRead(): Promise<ExpressRequestModel<RoleModel['role']>['response']> {
     return this.read();
   }
 }

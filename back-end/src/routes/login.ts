@@ -1,17 +1,13 @@
 import { Request, Response, Router } from 'express';
-import ReadUserController from '../controllers/User/ReadUserController';
+import AuthUserController from '../controllers/AuthUser/AuthUserController';
 
 const login = Router();
 
 const parsedController = (req: Request, res: Response) =>
-  new ReadUserController(req, res);
+  new AuthUserController(req, res);
 
 login.post('/login', (req, res) => {
-  parsedController(req, res).getRead;
-});
-
-login.get('/login', (req, res) => {
-  parsedController(req, res).getRead;
+  parsedController(req, res).getLogin;
 });
 
 export default login;

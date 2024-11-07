@@ -30,7 +30,7 @@ export class User {
   @DeleteDateColumn()
   DELETED_AT: Date;
 
-  @ManyToOne(() => Role, (role) => role.ROLE_ID)
+  @ManyToOne(() => Role, (role) => role.users)
   @JoinColumn({ name: 'ROLE_ID' })
   USER_ROLE: Role;
 }

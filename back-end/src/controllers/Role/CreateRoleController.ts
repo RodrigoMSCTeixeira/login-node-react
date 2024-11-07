@@ -1,35 +1,35 @@
 import ExpressRequestModel from '../../models/ExpressResquestModel';
+import RoleModel from '../../models/RoleModel';
 import ServiceModel from '../../models/ServiceModel';
-import UserModel from '../../models/UserModel';
-import ReadUserService from '../../services/User/ReadUserService';
 import ServiceError from '../../services/ServiceError/ServiceError';
+import CreateRoleService from '../../services/Role/CreateRoleService';
 
-export default class ReadUserController extends ServiceModel<
-  ExpressRequestModel<UserModel['user']>['response']
+export default class CreateRoleController extends ServiceModel<
+  ExpressRequestModel<RoleModel['role']>['response']
 > {
   #_req: ExpressRequestModel['request'];
-  #_res: ExpressRequestModel<UserModel['user']>['response'];
+  #_res: ExpressRequestModel<RoleModel['role']>['response'];
 
   constructor(
     req: ExpressRequestModel['request'],
-    res: ExpressRequestModel<UserModel['user']>['response']
+    res: ExpressRequestModel<RoleModel['role']>['response']
   ) {
     super();
     this.#_req = req;
     this.#_res = res;
   }
 
-  protected async read(): Promise<
-    ExpressRequestModel<UserModel['user']>['response']
+  protected async create(): Promise<
+    ExpressRequestModel<RoleModel['role']>['response']
   > {
     try {
-      const sanitizedBody = UserModel.sanitizeRequest(this.#_req.query);
+      const sanitizedBody = RoleModel.sanitizeRequest(this.#_req.body);
 
-      const response = await new ReadUserService({
+      const response = await new CreateRoleService({
         description: {
           body: sanitizedBody,
         },
-      }).getRead;
+      }).getCreate;
 
       return this.#_res.status(200).json({
         status: 'success',
@@ -46,12 +46,12 @@ export default class ReadUserController extends ServiceModel<
 
       this.#_res.status(500).json({
         status: 'failed',
-        message: 'Erro ao ler registro.',
+        message: 'Erro ao criar registro.',
       });
     }
   }
 
-  get getRead(): Promise<ExpressRequestModel<UserModel['user']>['response']> {
-    return this.read();
+  get getCreate(): Promise<ExpressRequestModel<RoleModel['role']>['response']> {
+    return this.create();
   }
 }

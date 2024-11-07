@@ -4,7 +4,6 @@ import { User } from '../../database/entities/User';
 import RequestParamsModel from '../../models/RequestParamsModel';
 import UserModel from '../../models/UserModel';
 import ServiceError from '../ServiceError/ServiceError';
-const bcrypt = require('bcryptjs');
 
 export default class ReadUserService extends ServiceModel<UserModel['user']> {
   #_user: UserModel['user']['description'];
@@ -19,7 +18,7 @@ export default class ReadUserService extends ServiceModel<UserModel['user']> {
   protected async read(): Promise<UserModel['user'] | UserModel['user'][]> {
     const userRepository = new ReadRepositoryService(User).repository;
 
-    if (this.#_user) {
+    if (this.#_user.name) {
       const user = await userRepository
         .createQueryBuilder('User')
         .leftJoinAndSelect('User.USER_ROLE', 'Role')
@@ -28,18 +27,7 @@ export default class ReadUserService extends ServiceModel<UserModel['user']> {
 
       if (!user)
         throw new ServiceError({
-          message: 'Verifique o usuário ou a senha.',
-          statusCode: 404,
-        });
-
-      const isPasswordValid = await bcrypt.compare(
-        this.#_user.pass,
-        user.PASSWORD
-      );
-
-      if (!isPasswordValid)
-        throw new ServiceError({
-          message: 'Senha incorreta.',
+          message: 'Verifique o nome de usuário.',
           statusCode: 404,
         });
 
@@ -47,6 +35,7 @@ export default class ReadUserService extends ServiceModel<UserModel['user']> {
         description: {
           id: user.USER_ID,
           name: user.USERNAME,
+          userRole: user.USER_ROLE.ROLE_NAME,
         },
       };
     } else {
@@ -54,8 +43,6 @@ export default class ReadUserService extends ServiceModel<UserModel['user']> {
         .createQueryBuilder('User')
         .leftJoinAndSelect('User.USER_ROLE', 'Role')
         .getMany();
-
-      console.log('user', user);
 
       const users = user.map(({ USERNAME, USER_ID, USER_ROLE }) => {
         return {

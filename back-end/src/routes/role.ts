@@ -1,17 +1,17 @@
 import { Request, Response, Router } from 'express';
-import UserController from '../controllers/User';
+import RoleController from '../controllers/Role';
 
-const user = Router();
+const role = Router();
 
 const parsedController = (req: Request, res: Response) =>
-  new UserController(req, res);
+  new RoleController(req, res);
 
-user.post('/user', (req, res) => {
+role.post('/role', (req, res) => {
   parsedController(req, res).create;
 });
 
-user.get('/user', (req, res) => {
+role.get('/role', (req, res) => {
   parsedController(req, res).read;
 });
 
-export default user;
+export default role;
